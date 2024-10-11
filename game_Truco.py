@@ -928,11 +928,15 @@ class Game:
                     self.action_reward_P1 += self.truco_puntosEnJuego
                     self.action_reward_P2 += self.truco_puntosEnJuego
                     self.gameEnded = True
-            elif(self.truco_roundsWonP1>=2):
+                elif(self.truco_roundsWonP1==2 and self.truco_roundsWonP2==2 and self.currentRound==2):
+                    self.action_reward_P1 += self.truco_puntosEnJuego
+                    self.action_reward_P2 += self.truco_puntosEnJuego
+                    self.gameEnded = True
+            elif(self.truco_roundsWonP1>=2 and (self.truco_roundsWonP1>self.truco_roundsWonP2)):
                 self.action_reward_P1 += self.truco_puntosEnJuego
                 self.action_reward_P2 += self.truco_puntosEnJuego
                 self.gameEnded = True
-            elif(self.truco_roundsWonP2>=2):
+            elif(self.truco_roundsWonP2>=2 and (self.truco_roundsWonP2>self.truco_roundsWonP1)):
                 self.action_reward_P1 += -self.truco_puntosEnJuego
                 self.action_reward_P2 += -self.truco_puntosEnJuego
                 self.gameEnded = True

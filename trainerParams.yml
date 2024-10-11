@@ -3,7 +3,7 @@ layer_sizes:
   out_size: 11
 
 training_params:
-  episodes: 1_000_000
+  episodes: 10_000_000
   dqn_params:
     replay_memory_size: 100000
     epsilon_init: 0.06
@@ -11,7 +11,7 @@ training_params:
     mini_batch_size: 128
     steps_between_optimization: 128
     updates_between_target_sync: 300
-    learning_rate_a: 0.001
+    learning_rate_a: 0.0001 #minimum to avoid nan outputs from nn
     discount_factor_g: 0.99
     anticipatory_parameter: 0.1 #no cambiar 
     input_layer_size: 655
@@ -26,7 +26,7 @@ training_params:
     reservoir_memory_size: 200000
     mini_batch_size: 128
     steps_between_optimization: 128
-    learning_rate_a: 0.5
+    learning_rate_a: 0.1 #min to avoid nan outputs from nn
     input_layer_size: 655
     hidden_layer1_size: 512
     hidden_layer2_size: 1024

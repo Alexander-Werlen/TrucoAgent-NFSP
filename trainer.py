@@ -45,7 +45,7 @@ def main():
                 agent2.receiveFeedback(s[:], r, t)
 
 
-        if(iteration%10000==0):
+        if(iteration%1000000==0):
             #save model for testing
             agent1.saveAvgPolicy("./trainedModels/truco/paramTesting/model1/agent1_iteration_{iteration}.pt".format(iteration=iteration))
             agent1.saveGreedyPolicy("./trainedModels/truco/paramTesting/model1/agent1_greedy_iteration_{iteration}.pt".format(iteration=iteration))
