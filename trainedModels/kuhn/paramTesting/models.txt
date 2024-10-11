@@ -1,0 +1,409 @@
+  
+exploitability_testing_params:
+  episodes: 10000
+  dqn_params:
+    replay_memory_size: 20000
+    epsilon_init: 1
+    epsilon_decay: 0.999
+    epsilon_min: 0.01
+    mini_batch_size: 2
+    steps_between_optimization: 2
+    steps_between_target_sync: 20
+    learning_rate_a: 0.01
+    discount_factor_g: 1
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+    enable_double_dqn: True
+
+MODEL1:
+training_params:
+  episodes: 100000
+  dqn_params:
+    replay_memory_size: 20000
+    epsilon_init: 1
+    epsilon_decay: 0.999
+    epsilon_min: 0.001
+    mini_batch_size: 32
+    steps_between_optimization: 32
+    steps_between_target_sync: 3200
+    learning_rate_a: 0.01
+    discount_factor_g: 0.99
+    anticipatory_parameter: 0.1 #no cambiar 
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+    enable_double_dqn: True
+
+  classification_params:
+    reservoir_memory_size: 20000
+    mini_batch_size: 32
+    steps_between_optimization: 32
+    learning_rate_a: 0.001
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+
+MODEL2:
+
+training_params:
+  episodes: 40000
+  dqn_params:
+    replay_memory_size: 40000
+    epsilon_init: 1
+    epsilon_decay: 0.99
+    epsilon_min: 0.001
+    mini_batch_size: 2
+    steps_between_optimization: 2
+    steps_between_target_sync: 20
+    learning_rate_a: 0.01
+    discount_factor_g: 1
+    anticipatory_parameter: 0.1 #no cambiar 
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+    enable_double_dqn: True
+
+  classification_params:
+    reservoir_memory_size: 40000
+    mini_batch_size: 32
+    steps_between_optimization: 32
+    learning_rate_a: 0.01
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+
+MODEL 3:
+layer_sizes:
+  in_size: 9
+  out_size: 4
+
+training_params:
+  episodes: 40000
+  dqn_params:
+    replay_memory_size: 40000
+    epsilon_init: 1
+    epsilon_decay: 0.99
+    epsilon_min: 0.001
+    mini_batch_size: 2
+    steps_between_optimization: 2
+    steps_between_target_sync: 20
+    learning_rate_a: 0.001
+    discount_factor_g: 1
+    anticipatory_parameter: 0.1 #no cambiar 
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+    enable_double_dqn: True
+
+  classification_params:
+    reservoir_memory_size: 40000
+    mini_batch_size: 32
+    steps_between_optimization: 32
+    learning_rate_a: 0.01
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+  
+exploitability_testing_params:
+  episodes: 10000
+  dqn_params:
+    replay_memory_size: 20000
+    epsilon_init: 1
+    epsilon_decay: 0.999
+    epsilon_min: 0.01
+    mini_batch_size: 2
+    steps_between_optimization: 2
+    steps_between_target_sync: 20
+    learning_rate_a: 0.01
+    discount_factor_g: 1
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+    enable_double_dqn: True
+
+
+MODEL 4
+layer_sizes:
+  in_size: 9
+  out_size: 4
+
+training_params:
+  episodes: 40000
+  dqn_params:
+    replay_memory_size: 40000
+    epsilon_init: 1
+    epsilon_decay: 0.99
+    epsilon_min: 0.001
+    mini_batch_size: 2
+    steps_between_optimization: 2
+    steps_between_target_sync: 200
+    learning_rate_a: 0.001
+    discount_factor_g: 1
+    anticipatory_parameter: 0.1 #no cambiar 
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+    enable_double_dqn: True
+
+  classification_params:
+    reservoir_memory_size: 40000
+    mini_batch_size: 2
+    steps_between_optimization: 2
+    learning_rate_a: 0.001
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+  
+exploitability_testing_params:
+  episodes: 10000
+  dqn_params:
+    replay_memory_size: 20000
+    epsilon_init: 1
+    epsilon_decay: 0.999
+    epsilon_min: 0.01
+    mini_batch_size: 2
+    steps_between_optimization: 2
+    steps_between_target_sync: 20
+    learning_rate_a: 0.01
+    discount_factor_g: 1
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+    enable_double_dqn: True
+
+MODEL 5 (Idem Model4 pero decide estrategia por cada juego)
+layer_sizes:
+  in_size: 9
+  out_size: 4
+
+training_params:
+  episodes: 40000
+  dqn_params:
+    replay_memory_size: 40000
+    epsilon_init: 1
+    epsilon_decay: 0.99
+    epsilon_min: 0.001
+    mini_batch_size: 2
+    steps_between_optimization: 2
+    steps_between_target_sync: 200
+    learning_rate_a: 0.001
+    discount_factor_g: 1
+    anticipatory_parameter: 0.1 #no cambiar 
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+    enable_double_dqn: True
+
+  classification_params:
+    reservoir_memory_size: 40000
+    mini_batch_size: 2
+    steps_between_optimization: 2
+    learning_rate_a: 0.001
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+  
+exploitability_testing_params:
+  episodes: 10000
+  dqn_params:
+    replay_memory_size: 20000
+    epsilon_init: 1
+    epsilon_decay: 0.999
+    epsilon_min: 0.01
+    mini_batch_size: 2
+    steps_between_optimization: 2
+    steps_between_target_sync: 20
+    learning_rate_a: 0.01
+    discount_factor_g: 1
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+    enable_double_dqn: True
+
+
+MODEL6 (estrategia decidida por juego) (resultados muy malos, aprende muy lento)
+
+training_params:
+  episodes: 40000
+  dqn_params:
+    replay_memory_size: 2000
+    epsilon_init: 1
+    epsilon_decay: 0.99
+    epsilon_min: 0.001
+    mini_batch_size: 2
+    steps_between_optimization: 2
+    steps_between_target_sync: 200
+    learning_rate_a: 0.01
+    discount_factor_g: 1
+    anticipatory_parameter: 0.1 #no cambiar 
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+    enable_double_dqn: True
+
+  classification_params:
+    reservoir_memory_size: 2000
+    mini_batch_size: 2
+    steps_between_optimization: 2
+    learning_rate_a: 0.0001
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+  
+exploitability_testing_params:
+  episodes: 10000
+  dqn_params:
+    replay_memory_size: 20000
+    epsilon_init: 1
+    epsilon_decay: 0.999
+    epsilon_min: 0.01
+    mini_batch_size: 2
+    steps_between_optimization: 2
+    steps_between_target_sync: 20
+    learning_rate_a: 0.01
+    discount_factor_g: 1
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+    enable_double_dqn: True
+
+MODEL 7
+training_params:
+  episodes: 40000
+  dqn_params:
+    replay_memory_size: 2000
+    epsilon_init: 1
+    epsilon_decay: 0.99
+    epsilon_min: 0.001
+    mini_batch_size: 2
+    steps_between_optimization: 2
+    steps_between_target_sync: 200
+    learning_rate_a: 0.01
+    discount_factor_g: 1
+    anticipatory_parameter: 0.1 #no cambiar 
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+    enable_double_dqn: True
+
+  classification_params:
+    reservoir_memory_size: 2000
+    mini_batch_size: 2
+    steps_between_optimization: 2
+    learning_rate_a: 0.01
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+  
+exploitability_testing_params:
+  episodes: 10000
+  dqn_params:
+    replay_memory_size: 20000
+    epsilon_init: 1
+    epsilon_decay: 0.999
+    epsilon_min: 0.01
+    mini_batch_size: 2
+    steps_between_optimization: 2
+    steps_between_target_sync: 20
+    learning_rate_a: 0.01
+    discount_factor_g: 1
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+    enable_double_dqn: True
+
+MODEL9
+
+training_params:
+  episodes: 100000
+  dqn_params:
+    replay_memory_size: 1000000
+    epsilon_init: 1
+    epsilon_decay: 0.995
+    epsilon_min: 0.01
+    mini_batch_size: 32
+    steps_between_optimization: 32
+    steps_between_target_sync: 3200
+    learning_rate_a: 0.1
+    discount_factor_g: 1
+    anticipatory_parameter: 0.1 #no cambiar 
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
+    enable_double_dqn: False
+
+  classification_params:
+    reservoir_memory_size: 1000000
+    mini_batch_size: 256
+    steps_between_optimization: 256
+    learning_rate_a: 0.001
+    input_layer_size: 9
+    hidden_layer1_size: 64
+    hidden_layer2_size: 128
+    hidden_layer3_size: 64
+    hidden_layer4_size: 32
+    output_layer_size: 4
