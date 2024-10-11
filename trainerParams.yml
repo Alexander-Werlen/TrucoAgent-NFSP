@@ -1,9 +1,9 @@
 layer_sizes:
-  in_size: 9
-  out_size: 4
+  in_size: 655
+  out_size: 11
 
 training_params:
-  episodes: 100000
+  episodes: 1_000_000
   dqn_params:
     replay_memory_size: 100000
     epsilon_init: 0.06
