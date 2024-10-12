@@ -569,6 +569,7 @@ class Game:
         self.truco_P2HasToRespondBet = False
         self.truco_roundsWonP1 = 0
         self.truco_roundsWonP2 = 0
+        self.truco_whoWonRounds = [None, None, None]
 
         self.envido_puntosEnJuego = 0
         self.envido_puntosEnApuestaP1 = 0
@@ -912,6 +913,8 @@ class Game:
                 self.truco_roundsWonP1+=1
             if(whoWon<=0):
                 self.truco_roundsWonP2+=1
+
+            self.truco_whoWonRounds[self.currentRound] = whoWon
             
             if(whoWon>=0):
                 self.isP1TrucoTurn = True
@@ -920,7 +923,6 @@ class Game:
                 self.isP1TrucoTurn = False
                 self.isP1Turn = False
             
-            self.currentRound+=1
 
             #check if ended
             if(self.truco_roundsWonP1 == self.truco_roundsWonP2):
@@ -929,8 +931,12 @@ class Game:
                     self.action_reward_P2 += self.truco_puntosEnJuego
                     self.gameEnded = True
                 elif(self.truco_roundsWonP1==2 and self.truco_roundsWonP2==2 and self.currentRound==2):
-                    self.action_reward_P1 += self.truco_puntosEnJuego
-                    self.action_reward_P2 += self.truco_puntosEnJuego
+                    if(self.truco_whoWonRounds[0]>=1):
+                        self.action_reward_P1 += self.truco_puntosEnJuego
+                        self.action_reward_P2 += self.truco_puntosEnJuego
+                    else:
+                        self.action_reward_P1 -= self.truco_puntosEnJuego
+                        self.action_reward_P2 -= self.truco_puntosEnJuego
                     self.gameEnded = True
             elif(self.truco_roundsWonP1>=2 and (self.truco_roundsWonP1>self.truco_roundsWonP2)):
                 self.action_reward_P1 += self.truco_puntosEnJuego
@@ -940,6 +946,8 @@ class Game:
                 self.action_reward_P1 += -self.truco_puntosEnJuego
                 self.action_reward_P2 += -self.truco_puntosEnJuego
                 self.gameEnded = True
+
+        self.currentRound+=1
         
         self.stateP1[
             self.STATE_SECTIONS_INDECES["compartidoSection"] +
