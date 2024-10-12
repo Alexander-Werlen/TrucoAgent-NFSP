@@ -947,7 +947,7 @@ class Game:
                 self.action_reward_P2 += -self.truco_puntosEnJuego
                 self.gameEnded = True
 
-        self.currentRound+=1
+            self.currentRound+=1
         
         self.stateP1[
             self.STATE_SECTIONS_INDECES["compartidoSection"] +
