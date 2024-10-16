@@ -35,21 +35,21 @@ training_params:
     output_layer_size: 11
   
 exploitability_testing_params:
-  episodes: 10000
+  episodes: 1000000
   dqn_params:
     replay_memory_size: 100000
-    epsilon_init: 1
-    epsilon_decay: 0.99
+    epsilon_init: 0.13
     epsilon_min: 0.01
-    mini_batch_size: 128
-    steps_between_optimization: 128
-    steps_between_target_sync: 300
-    learning_rate_a: 0.01
-    discount_factor_g: 1
-    input_layer_size: 9
-    hidden_layer1_size: 64
-    hidden_layer2_size: 128
-    hidden_layer3_size: 64
-    hidden_layer4_size: 32
-    output_layer_size: 4
+    mini_batch_size: 32
+    steps_between_optimization: 32
+    updates_between_target_sync: 100
+    learning_rate_a: 0.0001 #minimum to avoid nan outputs from nn
+    discount_factor_g: 0.99
+    anticipatory_parameter: 0.1 #no cambiar 
+    input_layer_size: 655
+    hidden_layer1_size: 512
+    hidden_layer2_size: 1024
+    hidden_layer3_size: 512
+    hidden_layer4_size: 1024
+    output_layer_size: 11
     enable_double_dqn: False

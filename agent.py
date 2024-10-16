@@ -1,9 +1,6 @@
-import numpy as np
 import random
 import torch
 from torch import nn
-import copy
-import math
 
 from dqn import DQN
 from replayMemory import ReplayMemory

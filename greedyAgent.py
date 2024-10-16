@@ -1,3 +1,4 @@
+import numpy as np
 import random
 import torch
 from torch import nn
@@ -6,13 +7,12 @@ from dqn import DQN
 from replayMemory import ReplayMemory
 
 class GreedyAgent:
-
     def __init__(self, isMano, params):
-
         self.lastState = None
         self.lastAction = None
         self.lastActionFollowedEpsilonGreedy = False
         self.isWaitingForFeedback = False
+
         if(not torch.cuda.is_available()):
             print("Cuda not available.")
             raise("Cuda not available.")
@@ -23,12 +23,11 @@ class GreedyAgent:
         #DQN params
         self.DQN_learning_rate_a    = params["dqn_params"]['learning_rate_a']        # learning rate (alpha)
         self.DQN_discount_factor_g  = params["dqn_params"]['discount_factor_g']      # discount rate (gamma)
-        self.DQN_steps_between_target_sync  = params["dqn_params"]['steps_between_target_sync']
+        self.DQN_updates_between_target_sync  = params["dqn_params"]['updates_between_target_sync']
         self.DQN_steps_between_optimization  = params["dqn_params"]['steps_between_optimization']
         self.DQN_replay_memory_size = params["dqn_params"]['replay_memory_size']     # size of replay memory
         self.DQN_mini_batch_size    = params["dqn_params"]['mini_batch_size']        # size of the training data set sampled from the replay memory
         self.DQN_epsilon_init       = params["dqn_params"]['epsilon_init']           # 1 = 100% random actions
-        self.DQN_epsilon_decay      = params["dqn_params"]['epsilon_decay']          # epsilon decay rate
         self.DQN_epsilon_min        = params["dqn_params"]['epsilon_min']            # minimum epsilon value
         self.DQN_input_layer_size = params["dqn_params"]['input_layer_size']
         self.DQN_hidden_layer1_size = params["dqn_params"]['hidden_layer1_size']
@@ -47,39 +46,36 @@ class GreedyAgent:
         self.epsilon_dqn = self.DQN_epsilon_init
         self.optimizer_dqn = torch.optim.SGD(self.policy_dqn.parameters(), lr=self.DQN_learning_rate_a)
         self.loss_fn_dqn = nn.MSELoss()
-
+        
         self.step_counter = 0
+        self.update_counter = 0
 
-
-    def chooseActionWithEpsilonGreedy(self, validityOfActions):
+    def chooseActionWithEpsilonGreedy(self):
         self.lastActionFollowedEpsilonGreedy = True
         if(random.random() < self.epsilon_dqn):
-            #random choice
-            validActions = []
-            for i in range(self.DQN_output_layer_size):
-                if(validityOfActions[i]): validActions.append(i)
-
-            chosenIdx = random.choice(validActions)
-           
+            chosenIdx = random.choice(range(self.DQN_output_layer_size))
             self.lastAction = torch.tensor(chosenIdx, dtype=torch.int64, device=self.device)
         else:
+            self.policy_dqn.eval()
             with torch.no_grad():
                 chosen = self.policy_dqn(self.lastState.unsqueeze(dim=0)).squeeze()
-                for i in range(self.DQN_output_layer_size):
-                    if(not validityOfActions[i]): chosen[i] = -10000
+                if(chosen[0]!=chosen[0]): raise("Network output was NAN")
                 chosenIdx = chosen.argmax().item()
                 self.lastAction = torch.tensor(chosenIdx, dtype=torch.int64, device=self.device)
+    
 
-    def chooseAction(self, state, validityOfActions):
+    def chooseAction(self, state):
         self.lastState = torch.tensor(state, dtype=torch.float, device=self.device)
 
-        self.chooseActionWithEpsilonGreedy(validityOfActions)
+        self.chooseActionWithEpsilonGreedy()
 
         self.isWaitingForFeedback = True
+        self.step_counter += 1
+        self.epsilon_dqn = max(self.DQN_epsilon_init/(self.step_counter**0.5), self.DQN_epsilon_min)
+
         return self.lastAction.item()
     
     def receiveFeedback(self, newState, reward, terminated):
-        self.step_counter += 1
         if(not self.isMano):
             reward = -reward
 
@@ -96,15 +92,16 @@ class GreedyAgent:
         if (len(self.memory_dqn)>self.DQN_mini_batch_size and self.step_counter%self.DQN_steps_between_optimization==0):
             mini_batch = self.memory_dqn.sample(self.DQN_mini_batch_size)
             self.optimize_dqn(mini_batch)
+            self.update_counter += 1
 
-        # Copy policy network to target network after a certain number of steps
-        if (self.step_counter%self.DQN_steps_between_target_sync==0):
+        
+        if (self.update_counter%self.DQN_updates_between_target_sync==0):
             self.target_dqn.load_state_dict(self.policy_dqn.state_dict())
-       
-        # Decay epsilon
-        self.epsilon_dqn = max(self.epsilon_dqn * self.DQN_epsilon_decay, self.DQN_epsilon_min)
+        
 
     def optimize_dqn(self, mini_batch):
+        self.policy_dqn.train()
+        self.target_dqn.eval()
         states, actions, new_states, rewards, terminations = zip(*mini_batch)
     
         states = torch.stack(states)
@@ -114,21 +111,25 @@ class GreedyAgent:
         new_states = torch.stack(new_states)
 
         rewards = torch.stack(rewards)
+
         terminations = torch.tensor(terminations).float().to(self.device)
 
         with torch.no_grad():
             if (self.DQN_enable_double_dqn):
                 best_actions_from_policy = self.policy_dqn(new_states).argmax(dim=1)
 
-                target_q = rewards + (1-terminations) * self.DQN_discount_factor_g * \
-                                self.target_dqn(new_states).gather(dim=1, index=best_actions_from_policy.unsqueeze(dim=1)).squeeze()
+                output = self.target_dqn(new_states).gather(dim=1, index=best_actions_from_policy.unsqueeze(dim=1)).squeeze()
+
+                target_q = rewards + (1-terminations) * self.DQN_discount_factor_g * output
             else:
                 # Calculate target Q values (expected returns)
-                target_q = rewards + (1-terminations) * self.DQN_discount_factor_g * self.target_dqn(new_states).max(dim=1)[0]
+                output = self.target_dqn(new_states).max(dim=1)[0]
+                target_q = rewards + (1-terminations) * self.DQN_discount_factor_g * output
+
+        
 
         # Calcuate Q values from current policy
         current_q = self.policy_dqn(states).gather(dim=1, index=actions.unsqueeze(dim=1)).squeeze()
-
         # Compute loss
         loss = self.loss_fn_dqn(current_q, target_q)
         # Optimize the model (backpropagation)
@@ -139,3 +140,4 @@ class GreedyAgent:
 
     def getIsWaitingForFeedback(self):
         return self.isWaitingForFeedback
+    

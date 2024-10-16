@@ -9,10 +9,11 @@ import random
 def main():
     
     classificator = Classificator(655, 11, 512, 1024, 512, 1024).to("cpu")
-    classificator.load_state_dict(torch.load("./trainedModels/truco/agent1.pt", weights_only=True))
+    #classificator.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model1/agent2_iteration_5000000.pt", weights_only=True))
+    classificator.load_state_dict(torch.load("./trainedModels/truco/agent2.pt", weights_only=True))
     classificator.eval()
     greedy = DQN(655, 11, 512, 1024, 512, 1024).to("cpu")
-    greedy.load_state_dict(torch.load("./trainedModels/truco/agent1_greedy.pt", weights_only=True))
+    greedy.load_state_dict(torch.load("./trainedModels/truco/agent2_greedy.pt", weights_only=True))
     greedy.eval()
 
     game = Game()
@@ -30,13 +31,13 @@ def main():
     while(not game.gameFinished()):
         #print("+++")
         #print("State: ", s)
-        if(not game.getIsP1Turn()):
+        if(game.getIsP1Turn()):
             print("-------------")
             print("-------------")
             print("-------------")
             print("-------------")
-            print("P2 Turn")
-            game.printStateP2()
+            print("P1 Turn")
+            #game.printStateP1()
 
             actionIdx = int(input("Choose action: "))
         else:
@@ -44,8 +45,8 @@ def main():
             print("-------------")
             print("-------------")
             print("-------------")
-            print("P1 Turn")
-            game.printStateP1()
+            print("P2 Turn")
+            game.printStateP2()
 
             actionLogits = classificator(torch.tensor(s, dtype=torch.float, device="cpu"))
             actionProbabilities = actionLogits.softmax(dim=0).detach()
