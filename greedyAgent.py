@@ -59,7 +59,7 @@ class GreedyAgent:
             self.policy_dqn.eval()
             with torch.no_grad():
                 chosen = self.policy_dqn(self.lastState.unsqueeze(dim=0)).squeeze()
-                if(chosen[0]!=chosen[0]): raise("Network output was NAN")
+                if(chosen[0]!=chosen[0]): raise Exception("Network output was NAN")
                 chosenIdx = chosen.argmax().item()
                 self.lastAction = torch.tensor(chosenIdx, dtype=torch.int64, device=self.device)
     
@@ -127,7 +127,8 @@ class GreedyAgent:
                 target_q = rewards + (1-terminations) * self.DQN_discount_factor_g * output
 
         
-
+        if(output[0]!=output[0]): 
+            raise Exception("Network output was NAN")
         # Calcuate Q values from current policy
         current_q = self.policy_dqn(states).gather(dim=1, index=actions.unsqueeze(dim=1)).squeeze()
         # Compute loss
@@ -140,4 +141,9 @@ class GreedyAgent:
 
     def getIsWaitingForFeedback(self):
         return self.isWaitingForFeedback
+    
+    def loadHotStart(self, path):
+        self.policy_dqn.load_state_dict(torch.load(path, weights_only=True))
+        self.target_dqn.load_state_dict(self.policy_dqn.state_dict())
+
     

@@ -2,18 +2,32 @@ from classificator import Classificator
 from dqn import DQN
 import torch
 from game_Truco import Game as Game
-
+import time
 import numpy as np
 import random
 
 def main():
+
+    ACTION_DESCRIPTION = {
+        0: "Tirar C1",
+        1: "Tirar C2",
+        2: "Tirar C3",
+        3: "Aceptar Envido",
+        4: "Rechazar Envido",
+        5: "Envido",
+        6: "Real envido",
+        7: "Falta envido",
+        8: "Aceptar Truco",
+        9: "Rechazar Truco",
+        10: "Bet truco"
+    }
     
     classificator = Classificator(655, 11, 512, 1024, 512, 1024).to("cpu")
     #classificator.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model1/agent2_iteration_5000000.pt", weights_only=True))
-    classificator.load_state_dict(torch.load("./trainedModels/truco/agent2.pt", weights_only=True))
+    classificator.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model1/agent2_iteration_27000000.pt", weights_only=True))
     classificator.eval()
     greedy = DQN(655, 11, 512, 1024, 512, 1024).to("cpu")
-    greedy.load_state_dict(torch.load("./trainedModels/truco/agent2_greedy.pt", weights_only=True))
+    greedy.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model1/agent2_greedy_iteration_27000000.pt", weights_only=True))
     greedy.eval()
 
     game = Game()
@@ -50,13 +64,20 @@ def main():
 
             actionLogits = classificator(torch.tensor(s, dtype=torch.float, device="cpu"))
             actionProbabilities = actionLogits.softmax(dim=0).detach()
+    
+            print("------")
+            print("Probabilities:")
+            for i in range(11):
+                print(i,ACTION_DESCRIPTION[i], round(actionProbabilities[i].item(),3))
 
-            print("Action probabilities:",actionProbabilities)
             q = greedy(torch.tensor(s, dtype=torch.float, device="cpu"))
-            print("Q-values:",q)
+            print("------")
+            print("Q values:")
+            for i in range(11):
+                print(i,ACTION_DESCRIPTION[i], round(q[i].item(),3))
 
             actionIdx = random.choices(range(11), weights=actionProbabilities, k=1)[0]
-            print("Chosen action:", actionIdx)
+            print("Chosen action:", ACTION_DESCRIPTION[actionIdx])
         
         (s1, r1, t1) = game.step(actionIdx)
         s = s1[:]
