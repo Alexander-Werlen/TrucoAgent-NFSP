@@ -22,12 +22,12 @@ def main():
         10: "Bet truco"
     }
     
-    classificator = Classificator(655, 11, 512, 1024, 512, 1024).to("cpu")
+    classificator = Classificator(655, 11, 1024, 512, 1024, 512).to("cpu")
     #classificator.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model1/agent2_iteration_5000000.pt", weights_only=True))
-    classificator.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model1/agent2_iteration_27000000.pt", weights_only=True))
+    classificator.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model3/agent1_iteration_0.pt", weights_only=True))
     classificator.eval()
-    greedy = DQN(655, 11, 512, 1024, 512, 1024).to("cpu")
-    greedy.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model1/agent2_greedy_iteration_27000000.pt", weights_only=True))
+    greedy = DQN(655, 11, 1024, 512, 1024, 512).to("cpu")
+    greedy.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model3/agent1_greedy_iteration_0.pt", weights_only=True))
     greedy.eval()
 
     game = Game()
@@ -45,12 +45,12 @@ def main():
     while(not game.gameFinished()):
         #print("+++")
         #print("State: ", s)
-        if(game.getIsP1Turn()):
+        if(not game.getIsP1Turn()):
             print("-------------")
             print("-------------")
             print("-------------")
             print("-------------")
-            print("P1 Turn")
+            print("P2 Turn")
             #game.printStateP1()
 
             actionIdx = int(input("Choose action: "))
@@ -59,8 +59,8 @@ def main():
             print("-------------")
             print("-------------")
             print("-------------")
-            print("P2 Turn")
-            game.printStateP2()
+            print("P1 Turn")
+            #game.printStateP1()
 
             actionLogits = classificator(torch.tensor(s, dtype=torch.float, device="cpu"))
             actionProbabilities = actionLogits.softmax(dim=0).detach()
@@ -78,9 +78,17 @@ def main():
 
             actionIdx = random.choices(range(11), weights=actionProbabilities, k=1)[0]
             print("Chosen action:", ACTION_DESCRIPTION[actionIdx])
+            input("ENTER TO CONTINUE")
         
         (s1, r1, t1) = game.step(actionIdx)
         s = s1[:]
+
+        if(game.gameFinished()):
+            print("reward por final: ", r1)
+        elif(game.getIsP1Turn()):
+            print("reward P1: ", r1)
+        else:
+            print("reward P2: ", r1)
          
         
         #print("Whoose turn:", game.getIsP1Turn())

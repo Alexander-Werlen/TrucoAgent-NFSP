@@ -64,7 +64,7 @@ model2:
       reservoir_memory_size: 200000
       mini_batch_size: 256
       steps_between_optimization: 256
-      learning_rate_a: 0.05 #min to avoid nan outputs from nn
+      learning_rate_a: 0.05 #changed to 0.01 after error
       input_layer_size: 655
       hidden_layer1_size: 1024
       hidden_layer2_size: 512

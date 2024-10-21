@@ -3,7 +3,7 @@ import random
 
 class ReservoirMemory:
 
-    def __init__(self, maxlen, minProbOfReplacement=0.05):
+    def __init__(self, maxlen, minProbOfReplacement):
         self.streamLength = 0
         self.maxlen = maxlen
         self.minProbOfReplacement = minProbOfReplacement

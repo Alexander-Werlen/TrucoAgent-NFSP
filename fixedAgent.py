@@ -30,6 +30,7 @@ class FixedAgent:
     
     def chooseActionWithPolicy(self, state):
         state = torch.tensor(state, dtype=torch.float, device=self.device)
+        self.classificator.eval()
         with torch.no_grad():
             actionLogits = self.classificator(state)
             if(actionLogits[0]!=actionLogits[0]): raise("Network output was NAN")

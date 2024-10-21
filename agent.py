@@ -51,6 +51,7 @@ class Agent:
         self.MCC_output_layer_size = params["classification_params"]['output_layer_size']
         self.MCC_reservoir_memory_size = params["classification_params"]['reservoir_memory_size']
         self.MCC_mini_batch_size    = params["classification_params"]['mini_batch_size'] 
+        self.MCC_min_prob_of_replacing_reservoir = params["classification_params"]['min_prob_of_replacing_reservoir']
 
         #DQN init        
         self.policy_dqn = DQN(self.DQN_input_layer_size, self.DQN_output_layer_size, self.DQN_hidden_layer1_size, self.DQN_hidden_layer2_size, self.DQN_hidden_layer3_size, self.DQN_hidden_layer4_size).to(self.device)
@@ -65,7 +66,7 @@ class Agent:
         #MCC init
         self.classificator = Classificator(self.MCC_input_layer_size, self.MCC_output_layer_size, self.MCC_hidden_layer1_size, self.MCC_hidden_layer2_size, self.MCC_hidden_layer3_size, self.MCC_hidden_layer4_size).to(self.device)
 
-        self.memory_mcc = ReservoirMemory(self.MCC_reservoir_memory_size)
+        self.memory_mcc = ReservoirMemory(self.MCC_reservoir_memory_size, minProbOfReplacement=self.MCC_min_prob_of_replacing_reservoir)
         self.loss_fn_mcc = nn.CrossEntropyLoss()
         self.optimizer_mcc = torch.optim.SGD(self.classificator.parameters(), lr=self.MCC_learning_rate_a)
         

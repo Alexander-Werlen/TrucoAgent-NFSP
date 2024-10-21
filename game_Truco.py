@@ -543,16 +543,17 @@ class Game:
         33: 21
     }
 
-
     finalState = np.zeros(stateSize)
+
     
     def __init__(self):
         self.gameEnded = False
-        self.puntosPartidaP1 = random.randint(0,29)
-        self.puntosPartidaP2 = random.randint(0,29)
+        self.puntosPartidaP1 = 0
+        self.puntosPartidaP2 = 0
         self.resetRound()
 
     def resetRound(self):
+        self.roundEnded = False
         self.cartasEnMesa = [None, None, None, None, None, None]
         self.envido_puntosPublicosP1 = None
         self.envido_puntosPublicosP2 = None
@@ -582,9 +583,6 @@ class Game:
         self.envido_P2ValidBets = [True,True,True]
         self.envido_faltaEnvidoWasChosen = False
         self.envido_alreadyPlayed = False
-
-        self.action_reward_P1 = 0
-        self.action_reward_P2 = 0
 
         self.initStates()
 
@@ -822,26 +820,21 @@ class Game:
             self.STATE_SECTIONS_INDECES["compartidoSection"] +
             self.STATE_COMPARTIDO_INDECES["envidoCanBetFaltaEnvidoP2"]
             ] = int(self.envido_P2ValidBets[2])
-
-        
-
+   
     def getState(self):
         if(self.gameEnded): return self.finalState
         if(self.isP1Turn): return self.stateP1
         else: return self.stateP2
 
-
     def invalidActionFeedback(self):
         self.gameEnded = True
-        if(self.isP1Turn): 
-            self.action_reward_P1 -= 30
-            self.action_reward_P2 -= 30
+        if(self.isP1Turn):
+            self.puntosPartidaP2 = 30
         else:
-            self.action_reward_P1 += 30
-            self.action_reward_P2 += 30 
+            self.puntosPartidaP1 = 30
         
         return False
-
+        
     def throwCard(self, cardIdx):
         
         if(self.isP1Turn):
@@ -927,25 +920,21 @@ class Game:
             #check if ended
             if(self.truco_roundsWonP1 == self.truco_roundsWonP2):
                 if(self.truco_roundsWonP1==3 and self.truco_roundsWonP2==3):
-                    self.action_reward_P1 += self.truco_puntosEnJuego
-                    self.action_reward_P2 += self.truco_puntosEnJuego
-                    self.gameEnded = True
+                    self.puntosPartidaP1 += self.truco_puntosEnJuego
+                    self.roundEnded = True
                 elif(self.truco_roundsWonP1==2 and self.truco_roundsWonP2==2 and self.currentRound==2):
                     if(self.truco_whoWonRounds[0]>=1):
-                        self.action_reward_P1 += self.truco_puntosEnJuego
-                        self.action_reward_P2 += self.truco_puntosEnJuego
+                        self.puntosPartidaP1 += self.truco_puntosEnJuego
+                        self.roundEnded = True
                     else:
-                        self.action_reward_P1 -= self.truco_puntosEnJuego
-                        self.action_reward_P2 -= self.truco_puntosEnJuego
-                    self.gameEnded = True
+                        self.puntosPartidaP2 += self.truco_puntosEnJuego
+                        self.roundEnded = True
             elif(self.truco_roundsWonP1>=2 and (self.truco_roundsWonP1>self.truco_roundsWonP2)):
-                self.action_reward_P1 += self.truco_puntosEnJuego
-                self.action_reward_P2 += self.truco_puntosEnJuego
-                self.gameEnded = True
+                self.puntosPartidaP1 += self.truco_puntosEnJuego
+                self.roundEnded = True
             elif(self.truco_roundsWonP2>=2 and (self.truco_roundsWonP2>self.truco_roundsWonP1)):
-                self.action_reward_P1 += -self.truco_puntosEnJuego
-                self.action_reward_P2 += -self.truco_puntosEnJuego
-                self.gameEnded = True
+                self.puntosPartidaP2 += self.truco_puntosEnJuego
+                self.roundEnded = True
 
             self.currentRound+=1
         
@@ -1008,8 +997,6 @@ class Game:
 
             if(self.handP1.envidoValueOfHand>=self.handP2.envidoValueOfHand):
                 self.puntosPartidaP1 += self.envido_puntosEnJuego
-                self.action_reward_P1 += self.envido_puntosEnJuego
-                self.action_reward_P2 += self.envido_puntosEnJuego
 
                 self.stateP1[
                     self.STATE_SECTIONS_INDECES["compartidoSection"] +
@@ -1023,8 +1010,6 @@ class Game:
                 ] = 1
             else:
                 self.puntosPartidaP2 += self.envido_puntosEnJuego
-                self.action_reward_P1 += -self.envido_puntosEnJuego
-                self.action_reward_P2 += -self.envido_puntosEnJuego
 
                 self.stateP1[
                     self.STATE_SECTIONS_INDECES["compartidoSection"] +
@@ -1078,8 +1063,6 @@ class Game:
             self.envido_P2ValidBets = [False, False, False]
 
             self.puntosPartidaP2 += self.envido_puntosEnJuego
-            self.action_reward_P1 -= self.envido_puntosEnJuego
-            self.action_reward_P2 -= self.envido_puntosEnJuego
 
             self.isP1Turn = self.isP1TrucoTurn
             if(self.truco_P1HasToRespondBet):
@@ -1248,9 +1231,8 @@ class Game:
             if(self.envido_P1HasToRespondBet): return self.invalidActionFeedback()
             if(not self.truco_P1HasToRespondBet): return self.invalidActionFeedback()
             
-            self.gameEnded = True
-            self.action_reward_P1 -= self.truco_puntosEnJuego
-            self.action_reward_P2 -= self.truco_puntosEnJuego
+            self.roundEnded = True
+            self.puntosPartidaP2 += self.truco_puntosEnJuego
      
         if(action == 10):
             #bet Truco
@@ -1418,8 +1400,6 @@ class Game:
 
             if(self.handP1.envidoValueOfHand>=self.handP2.envidoValueOfHand):
                 self.puntosPartidaP1 += self.envido_puntosEnJuego
-                self.action_reward_P1 += self.envido_puntosEnJuego
-                self.action_reward_P2 += self.envido_puntosEnJuego
 
                 self.stateP1[
                     self.STATE_SECTIONS_INDECES["compartidoSection"] +
@@ -1433,8 +1413,6 @@ class Game:
                 ] = 1
             else:
                 self.puntosPartidaP2 += self.envido_puntosEnJuego
-                self.action_reward_P1 += -self.envido_puntosEnJuego
-                self.action_reward_P2 += -self.envido_puntosEnJuego
 
                 self.stateP1[
                     self.STATE_SECTIONS_INDECES["compartidoSection"] +
@@ -1488,8 +1466,6 @@ class Game:
             self.envido_P2ValidBets = [False, False, False]
 
             self.puntosPartidaP1 += self.envido_puntosEnJuego
-            self.action_reward_P1 += self.envido_puntosEnJuego
-            self.action_reward_P2 += self.envido_puntosEnJuego
 
             self.isP1Turn = self.isP1TrucoTurn
             if(self.truco_P1HasToRespondBet):
@@ -1658,9 +1634,8 @@ class Game:
             if(self.envido_P2HasToRespondBet): return self.invalidActionFeedback()
             if(not self.truco_P2HasToRespondBet): return self.invalidActionFeedback()
             
-            self.gameEnded = True
-            self.action_reward_P1 += self.truco_puntosEnJuego
-            self.action_reward_P2 += self.truco_puntosEnJuego
+            self.roundEnded = True
+            self.puntosPartidaP1 += self.truco_puntosEnJuego
        
         if(action == 10):
             #bet Truco
@@ -1779,31 +1754,26 @@ class Game:
             self.refreshEnvidoState()
 
     def step(self, action):
-        #action
-        #[tirarC1, tirarC2, tirarC3, aceptarEnvidoBet, envido, realenvido, faltaenvido, aceptarTrucoBet, betTruco]
+        if(self.gameEnded):
+            raise Exception("Tried to make step when game had already ended")
+    
         if(self.isP1Turn):
-            self.action_reward_P1 = 0
             self.handleActionP1(action)
         else:
-            self.action_reward_P2 = 0
             self.handleActionP2(action)
 
+        self.action_reward = 0
         if(self.puntosPartidaP1>=30):
             self.gameEnded = True
-            self.action_reward_P1 += 30
-            self.action_reward_P2 += 30
-
-        if(self.puntosPartidaP2>=30):
+            self.action_reward = 1
+        elif(self.puntosPartidaP2>=30):
             self.gameEnded = True
-            self.action_reward_P1 -= 30
-            self.action_reward_P2 -= 30
+            self.action_reward = -1
+        elif(self.roundEnded):
+            self.resetRound()
 
-        if(self.isP1Turn):
-            return (self.getState(), self.action_reward_P1, self.gameEnded)
-        else:
-            return (self.getState(), self.action_reward_P2, self.gameEnded)
+        return (self.getState(), self.action_reward, self.gameEnded)
             
-        
     
     def gameFinished(self):
         return self.gameEnded
