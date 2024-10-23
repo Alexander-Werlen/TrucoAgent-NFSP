@@ -357,7 +357,6 @@ class Deck:
         
         return (Hand(cardsP1[0], cardsP1[1], cardsP1[2]), Hand(cardsP2[0], cardsP2[1], cardsP2[2]))
 
-
 def trucoValueComparator(Card1: Card, Card2: Card):
     """
     Compares two cards by truco rank.
@@ -389,9 +388,15 @@ def envidoValueComparator(envValueP1: int, envValueP2: int):
     elif(envValueP1 < envValueP2): return -1
     else: return 0
 
-
 class Game:
     DECK = Deck()
+
+    INITIAL_STATES_VALUES = {}
+    with open("./trainedModels/truco/initStateValues.txt", "r") as f:
+        for line in f:
+            [key, value] = line.strip().split(sep = " ")
+            INITIAL_STATES_VALUES[key] = float(value)
+        
 
     VALID_ENVIDO_BET_TRANSITIONS = {
         #[canSayEnvido, canSayRealEnvido, canSayFaltaEnvido]
@@ -548,8 +553,8 @@ class Game:
     
     def __init__(self):
         self.gameEnded = False
-        self.puntosPartidaP1 = 0
-        self.puntosPartidaP2 = 0
+        self.puntosPartidaP1 = random.randint(15,29)
+        self.puntosPartidaP2 = random.randint(15,29)
         self.resetRound()
 
     def resetRound(self):
@@ -946,7 +951,6 @@ class Game:
             self.STATE_SECTIONS_INDECES["compartidoSection"] +
             self.STATE_COMPARTIDO_INDECES["isP1TrucoTurn"]
         ] = int(self.isP1TrucoTurn)
-
 
     def handleActionP1(self, action):
 
@@ -1349,7 +1353,6 @@ class Game:
                     self.STATE_SECTIONS_INDECES["compartidoSection"] +
                     self.STATE_COMPARTIDO_INDECES["trucoCanBetValecuatroP2"]
                 ] = 1
-
 
     def handleActionP2(self, action):
         if(action==0):
@@ -1754,7 +1757,7 @@ class Game:
             self.refreshEnvidoState()
 
     def step(self, action):
-        if(self.gameEnded):
+        if(self.gameEnded or self.roundEnded):
             raise Exception("Tried to make step when game had already ended")
     
         if(self.isP1Turn):
@@ -1765,15 +1768,15 @@ class Game:
         self.action_reward = 0
         if(self.puntosPartidaP1>=30):
             self.gameEnded = True
-            self.action_reward = 1
+            self.action_reward = 50
         elif(self.puntosPartidaP2>=30):
             self.gameEnded = True
-            self.action_reward = -1
+            self.action_reward = -50
         elif(self.roundEnded):
-            self.resetRound()
+            self.gameEnded = True
+            self.action_reward = -1*self.INITIAL_STATES_VALUES[f"e[{self.puntosPartidaP2}-{self.puntosPartidaP1}]"] ##SOLO FUNCIONA SI LA PARTIDA EMPIEZA EN 15-15 por trailing 0 en x<=9
 
         return (self.getState(), self.action_reward, self.gameEnded)
-            
     
     def gameFinished(self):
         return self.gameEnded
@@ -2101,7 +2104,4 @@ class Game:
 
         print("/////////////////////////")
 
-if __name__ == "__main__":
-    game = Game(5,1)
-    print(game.stateP1)
       

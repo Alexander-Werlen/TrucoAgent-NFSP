@@ -71,3 +71,59 @@ model2:
       hidden_layer3_size: 1024
       hidden_layer4_size: 512
       output_layer_size: 11
+
+model3:
+  training_params:
+    episodes: 100_000_000
+    dqn_params:
+      replay_memory_size: 100000
+      epsilon_init: 0.13
+      epsilon_min: 0
+      mini_batch_size: 256
+      steps_between_optimization: 256
+      updates_between_target_sync: 1000
+      learning_rate_a: 0.1 #minimum to avoid nan outputs from nn
+      discount_factor_g: 0.99
+      anticipatory_parameter: 0.1 #no cambiar 
+      input_layer_size: 655
+      hidden_layer1_size: 1024
+      hidden_layer2_size: 512
+      hidden_layer3_size: 1024
+      hidden_layer4_size: 512
+      output_layer_size: 11
+      enable_double_dqn: True
+
+    classification_params:
+      reservoir_memory_size: 200000
+      mini_batch_size: 256
+      steps_between_optimization: 256
+      learning_rate_a: 0.01 #min to avoid nan outputs from nn
+      min_prob_of_replacing_reservoir: 0.25
+      input_layer_size: 655
+      hidden_layer1_size: 1024
+      hidden_layer2_size: 512
+      hidden_layer3_size: 1024
+      hidden_layer4_size: 512
+      output_layer_size: 11
+    
+  exploitability_testing_params:
+    episodes: 40000
+    dqn_params:
+      replay_memory_size: 100000
+      epsilon_init: 0.0
+      epsilon_min: 0
+      mini_batch_size: 256
+      steps_between_optimization: 256
+      updates_between_target_sync: 1000
+      learning_rate_a: 0.01 #minimum to avoid nan outputs from nn
+      discount_factor_g: 0.99
+      anticipatory_parameter: 0.1 #no cambiar 
+      input_layer_size: 655
+      hidden_layer1_size: 1024
+      hidden_layer2_size: 512
+      hidden_layer3_size: 1024
+      hidden_layer4_size: 512
+      output_layer_size: 11
+      enable_double_dqn: True
+
+
