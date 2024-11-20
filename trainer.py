@@ -8,7 +8,7 @@ def main():
     with open('trainerParams.yml', 'r') as params_file:
         params = yaml.safe_load(params_file)
     
-    modelSelected = 3
+    modelSelected = 5
     params = params[f"model{modelSelected}"] #seleccion de modelo
 
     print("Started training...")

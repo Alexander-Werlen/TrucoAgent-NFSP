@@ -9,7 +9,7 @@ class FixedAgent:
         if(not torch.cuda.is_available()):
             print("Cuda not available.")
             raise("Cuda not available.")
-        self.device = 'cpu' if torch.cuda.is_available() else 'cpu'
+        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
         self.isMano = isMano
 
@@ -38,4 +38,7 @@ class FixedAgent:
 
             chosenIdx = torch.distributions.categorical.Categorical(probs=actionProbabilities).sample().item()
             return chosenIdx
+        
+    def chooseAction(self, state):
+        return self.chooseActionWithPolicy(state)
 

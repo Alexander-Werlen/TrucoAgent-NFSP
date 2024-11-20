@@ -24,10 +24,10 @@ def main():
     
     classificator = Classificator(655, 11, 1024, 512, 1024, 512).to("cpu")
     #classificator.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model1/agent2_iteration_5000000.pt", weights_only=True))
-    classificator.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model3/agent1_iteration_0.pt", weights_only=True))
+    classificator.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model3/agent1_iteration_40000000.pt", weights_only=True))
     classificator.eval()
     greedy = DQN(655, 11, 1024, 512, 1024, 512).to("cpu")
-    greedy.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model3/agent1_greedy_iteration_0.pt", weights_only=True))
+    greedy.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model3/agent1_greedy_iteration_40000000.pt", weights_only=True))
     greedy.eval()
 
     game = Game()
@@ -37,6 +37,7 @@ def main():
 
     print("-----------------")
     print("Game Started")
+    print(f"({game.puntosPartidaP1}-{game.puntosPartidaP2})")
     print("-----------------")
     print("Hand P1:", game.handP1)
     print("Hand P2:", game.handP2)
