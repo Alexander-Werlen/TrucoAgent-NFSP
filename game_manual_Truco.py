@@ -599,6 +599,7 @@ class Game:
         self.envido_puntosPublicosP2 = None
         self.handP1, self.handP2 = self.DECK.dealCards()
 
+
         self.wantsToHardCodeHand = input("wants to hardcode hand? (0 no/1 si): ")
         if(self.wantsToHardCodeHand==1):
             print("input known cards")
@@ -615,6 +616,9 @@ class Game:
                 print("P1 hand: ", self.handP1)
             else:
                 print("P2 hand: ", self.handP2)
+
+        print("Hand P1:"  , self.handP1)
+        print("Hand P2:"  , self.handP2)
 
         self.cardWasUsedP1 = [False, False, False]
         self.cardWasUsedP2 = [False, False, False]

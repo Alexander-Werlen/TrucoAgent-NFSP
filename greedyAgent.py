@@ -16,7 +16,7 @@ class GreedyAgent:
         if(not torch.cuda.is_available()):
             print("Cuda not available.")
             raise("Cuda not available.")
-        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        self.device = 'cpu' if torch.cuda.is_available() else 'cpu'
 
         self.isMano = isMano
         self.hyperparameter_set = params

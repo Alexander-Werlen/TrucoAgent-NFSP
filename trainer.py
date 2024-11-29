@@ -16,7 +16,7 @@ def main():
     agent2 = Agent(False, params["training_params"])
 
     episodes = params["training_params"]["episodes"]
-    for iteration in tqdm(range(episodes)):
+    for iteration in tqdm(range(episodes), smoothing=0.1, mininterval=1):
         #print("------")
         #print("newGame")
         game = Game()

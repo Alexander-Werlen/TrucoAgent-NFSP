@@ -180,6 +180,10 @@ class Agent:
         current_q = self.policy_dqn(states).gather(dim=1, index=actions.unsqueeze(dim=1)).squeeze()
         # Compute loss
         loss = self.loss_fn_dqn(current_q, target_q)
+        if(loss.item()!=loss.item() or loss.item()>100000):
+            raise Exception("Loss invalid")
+        #print(loss, self.isMano)
+
         # Optimize the model (backpropagation)
         self.optimizer_dqn.zero_grad()  # Clear gradients
         loss.backward()             # Compute gradients
@@ -197,6 +201,9 @@ class Agent:
         actionsLogits = self.classificator(states)
 
         loss = self.loss_fn_mcc(actionsLogits, actions)
+        if(loss.item()!=loss.item() or loss.item()>100):
+            raise Exception("Loss invalid")
+        #print(loss, self.isMano)
 
         # Optimize the model (backpropagation)
         self.optimizer_mcc.zero_grad()  # Clear gradients

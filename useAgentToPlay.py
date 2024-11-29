@@ -22,8 +22,8 @@ def main():
     
     classificatorP1 = Classificator(655, 11, 1024, 512, 1024, 512).to("cpu")
     classificatorP2 = Classificator(655, 11, 1024, 512, 1024, 512).to("cpu")
-    classificatorP1.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model3/agent1_iteration_54000000.pt", weights_only=True))
-    classificatorP2.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model3/agent2_iteration_54000000.pt", weights_only=True))
+    classificatorP1.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model5/agent1_iteration_50000000.pt", weights_only=True))
+    classificatorP2.load_state_dict(torch.load("./trainedModels/truco/paramTesting/model5/agent2_iteration_50000000.pt", weights_only=True))
     classificatorP1.eval()
     classificatorP2.eval()
 
@@ -52,10 +52,10 @@ def main():
                     actionLogits = classificatorP1(torch.tensor(s, dtype=torch.float, device="cpu"))
                     actionProbabilities = actionLogits.softmax(dim=0).detach()
             
-                    """ print("------")
+                    print("------")
                     print("Probabilities:")
                     for i in range(11):
-                        print(i,ACTION_DESCRIPTION[i], round(actionProbabilities[i].item(),3)) """
+                        print(i,ACTION_DESCRIPTION[i], round(actionProbabilities[i].item(),3))
                     actionIdx = random.choices(range(11), weights=actionProbabilities, k=1)[0]
                     print("Chosen action:", ACTION_DESCRIPTION[actionIdx])
 
@@ -70,10 +70,10 @@ def main():
                     actionLogits = classificatorP2(torch.tensor(s, dtype=torch.float, device="cpu"))
                     actionProbabilities = actionLogits.softmax(dim=0).detach()
             
-                    """ print("------")
+                    print("------")
                     print("Probabilities:")
                     for i in range(11):
-                        print(i,ACTION_DESCRIPTION[i], round(actionProbabilities[i].item(),3)) """
+                        print(i,ACTION_DESCRIPTION[i], round(actionProbabilities[i].item(),3))
                     actionIdx = random.choices(range(11), weights=actionProbabilities, k=1)[0]
                     print("Chosen action:", ACTION_DESCRIPTION[actionIdx])
             

@@ -1,6 +1,6 @@
 import torch
 
-from classificator import Classificator
+from classificator2 import Classificator
 
 class FixedAgent:
 
